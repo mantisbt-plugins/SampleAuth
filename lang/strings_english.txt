@@ -1,0 +1,6 @@
+<?php
+# Copyright (c) MantisBT Team - mantisbt-dev@lists.sourceforge.net
+# Licensed under the MIT license
+
+$s_plugin_SampleAuth_title = 'SampleAuth';
+$s_plugin_SampleAuth_description = 'A plugin that demonstrates how to implement auth plugins.';
