@@ -31,9 +31,11 @@ If a flag is not returned by the plugin, the default value will be used based on
 ## Screenshots
 
 Login Page
+
 ![Login Page](doc/sample_auth_login_page.png "Login Page")
 
 User My Account Page
+
 ![Profile Page](doc/sample_auth_no_password_change.png "Profile Page")
 
 ## Dependencies
