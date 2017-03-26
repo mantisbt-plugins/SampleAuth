@@ -5,7 +5,7 @@
 /**
  * Sample Auth plugin
  */
-class SampleAuthPlugin extends MantisPlugin  {
+class SampleAuthPlugin extends AuthPlugin  {
 	/**
 	 * A method that populates the plugin information and minimum requirements.
 	 * @return void
@@ -37,20 +37,34 @@ class SampleAuthPlugin extends MantisPlugin  {
 		return $t_hooks;
 	}
 
-	function auth_flags() {
+	function auth_flags( $p_event_name, AuthFlags $p_flags ) {
 		# Don't access DB if db_is_connected() is false.
 		# See list of flags in core/authentication_api.php auth_flags() function.
-		$t_flags = array(
-			'access_level_set_password' => NOBODY,
-			'password_managed_elsewhere_message' => 'No passwords are needed with SampleAuth',
-			'password_change_not_allowed_message' => 'Passwords are no more, you cannot change them!',
-			'access_level_can_use_standard_login' => NOBODY,
-			'login_page' => plugin_page( 'login_page', /* redirect */ true ),
-			'logout_redirect_page' => plugin_page( 'logout', /* redirect */ true ),
-			'perm_session_enabled' => OFF,
-			'anonymous_enabled' => OFF,
-		);
 
-		return $t_flags;
+		# Passwords managed externally for all users
+		$p_flags->setSetPasswordThreshold( NOBODY );
+		$p_flags->setPasswordManagedExternallyMessage( 'Passwords are no more, you cannot change them!' );
+
+		# No one can use standard auth mechanism
+		$p_flags->setUserStandardLoginThreshold( NOBODY );
+
+		# Override Login page and Logout Redirect
+		$p_flags->setLoginPage( plugin_page( 'login_page', /* redirect */ true ) );
+		$p_flags->setLogoutRedirectPage( plugin_page( 'logout', /* redirect */ true ) );
+
+		# No long term session for identity provider to be able to kick users out.
+		$p_flags->setPermSessionEnabled( false );
+
+		# Disable anonymous access
+		$p_flags->setAnonymousEnabled( false );
+
+		# Set default access level for new signups, e.g. users rather than team members.
+		$p_flags->setSignupAccessLevel( REPORTER );
+
+		# Enable re-authentication and use more aggressive timeout.
+		$p_flags->setReauthenticationEnabled( true );
+		$p_flags->setReauthenticationLifetime( 10 );
+
+		return $p_flags;
 	}
 }
