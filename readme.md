@@ -28,5 +28,13 @@ The authentication flags events enables the plugin to control MantisBT core auth
 
 If a flag is not returned by the plugin, the default value will be used based on MantisBT core configuration.
 
+## Screenshots
+
+Login Page
+![Login Page](doc/sample_auth_login_page.png "Login Page")
+
+User My Account Page
+![Profile Page](doc/sample_auth_no_password_change.png "Profile Page")
+
 ## Dependencies
 MantisBT v2.3.0-dev once auth plugin support is added.
