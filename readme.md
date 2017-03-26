@@ -10,6 +10,7 @@ The plugin can be easily modified to redirect to an identity provider and valida
 The authentication flags events enables the plugin to control MantisBT core authentication behavior and provide its own authentication pages.
 
 - `signup_enabled` - enable signups (ON/OFF).
+- `signup_access_level` - access level to assign for users who signup.
 - `anonymous_enabled` - enable anonymous login (ON/OFF)
 - `anonymous_account` - anonymous account name. Only applicable when `anonymous_enabled` is set to ON.
 - `access_level_set_password` minimum access level to set password in MantisBT database or NOBODY to disable.
