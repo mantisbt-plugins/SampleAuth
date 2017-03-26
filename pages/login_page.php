@@ -115,44 +115,6 @@ layout_login_page_begin();
 			$t_warnings = array();
 			$t_upgrade_required = false;
 			if( config_get_global( 'admin_checks' ) == ON && file_exists( dirname( __FILE__ ) .'/admin' ) ) {
-				# Generate a warning if default user administrator/root is valid.
-				$t_admin_user_id = user_get_id_by_name( 'administrator' );
-				if( $t_admin_user_id !== false ) {
-					if( user_is_enabled( $t_admin_user_id ) && auth_does_password_match( $t_admin_user_id, 'root' ) ) {
-						$t_warnings[] = lang_get( 'warning_default_administrator_account_present' );
-					}
-				}
-
-				/**
-				 * Display Warnings for enabled debugging / developer settings
-				 * @param string $p_type    Message Type.
-				 * @param string $p_setting Setting.
-				 * @param string $p_value   Value.
-				 * @return string
-				 */
-				function debug_setting_message ( $p_type, $p_setting, $p_value ) {
-					return sprintf( lang_get( 'warning_change_setting' ), $p_setting, $p_value )
-					. sprintf( lang_get( 'word_separator' ) )
-					. sprintf( lang_get( "warning_${p_type}_hazard" ) );
-				}
-
-				$t_config = 'show_detailed_errors';
-				if( config_get( $t_config ) != OFF ) {
-					$t_warnings[] = debug_setting_message( 'security', $t_config, 'OFF' );
-				}
-				$t_config = 'display_errors';
-				$t_errors = config_get_global( $t_config );
-				if( !(
-					isset( $t_errors[E_ALL] ) && $t_errors[E_ALL] == DISPLAY_ERROR_HALT
-					||	isset( $t_errors[E_USER_ERROR] ) && $t_errors[E_USER_ERROR] == DISPLAY_ERROR_HALT
-				)
-				) {
-					$t_warnings[] = debug_setting_message(
-						'integrity',
-						$t_config . '[E_USER_ERROR]',
-						DISPLAY_ERROR_HALT );
-				}
-
 				# since admin directory and db_upgrade lists are available check for missing db upgrades
 				# if db version is 0, we do not have a valid database.
 				$t_db_version = config_get( 'database_version', 0 );
