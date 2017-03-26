@@ -15,9 +15,10 @@ $t_return = string_url( string_sanitize_url( $f_return ) );
 $t_user_id = is_blank( $f_username ) ? false : user_get_id_by_name( $f_username );
 
 if( $t_user_id == false ) {
-	$t_uri = auth_login_page();
-	if( !is_blank( $f_return ) ) {
-		$t_uri .= '?return=' . string_url( $t_return );
+	if( is_blank( $f_return ) ) {
+		$t_uri = auth_login_page();
+	} else {
+		$t_uri = auth_login_page( 'return=' . $t_return );
 	}
 
 	print_header_redirect( $t_uri );
@@ -28,7 +29,7 @@ auth_login_user( $t_user_id );
 
 # Redirect to original page user wanted to access before authentication
 if( !is_blank( $t_return ) ) {
-	print_header_redirect( $t_return );
+	print_header_redirect( 'login_cookie_test.php?return=' . $t_return );
 }
 
 # If no return page, redirect to default page
