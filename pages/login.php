@@ -7,7 +7,9 @@ require_api( 'authentication_api.php' );
 require_api( 'user_api.php' );
 
 $f_username = gpc_get( 'username' );
+$f_reauthenticate = gpc_get_bool( 'reauthenticate', false );
 $f_return = gpc_get_string( 'return', config_get( 'default_home_page' ) );
+
 $t_return = string_url( string_sanitize_url( $f_return ) );
 
 # TODO: use custom authentication method here.
@@ -15,11 +17,22 @@ $t_return = string_url( string_sanitize_url( $f_return ) );
 $t_user_id = is_blank( $f_username ) ? false : user_get_id_by_name( $f_username );
 
 if( $t_user_id == false ) {
-	if( is_blank( $f_return ) ) {
-		$t_uri = auth_login_page();
-	} else {
-		$t_uri = auth_login_page( 'return=' . $t_return );
+	$t_query_args = array(
+		'error' => 1,
+		'username' => $f_username,
+	);
+
+	if( !is_blank( 'return' ) ) {
+		$t_query_args['return'] = $t_return;
 	}
+
+	if( $f_reauthenticate ) {
+		$t_query_args['reauthenticate'] = 1;
+	}
+
+	$t_query_text = http_build_query( $t_query_args, '', '&' );
+
+	$t_uri = auth_login_page( $t_query_text );
 
 	print_header_redirect( $t_uri );
 }
