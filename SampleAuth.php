@@ -43,7 +43,7 @@ class SampleAuthPlugin extends MantisPlugin  {
 		$t_flags = array(
 			'access_level_set_password' => NOBODY,
 			'password_managed_elsewhere_message' => 'No passwords are needed with SampleAuth',
-			'no_password_change' => 'Passwords are no more, you cannot change them!',
+			'password_change_not_allowed_message' => 'Passwords are no more, you cannot change them!',
 			'access_level_can_use_standard_login' => NOBODY,
 			'login_page' => plugin_page( 'login_page', /* redirect */ true ),
 			'logout_redirect_page' => plugin_page( 'logout', /* redirect */ true ),
