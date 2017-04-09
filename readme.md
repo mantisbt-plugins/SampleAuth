@@ -1,24 +1,24 @@
 # SampleAuth Plugin
 
-This is a sample authentication plugin showing how a MantisBT authentication plugin can implement its own login flow and control authentication related flags.
+This is a sample authentication plugin showing how a MantisBT authentication plugin can implement its own authentication and control authentication related flags on a per user basis.
 
-The authentication mechanism implemented by this plugin just takes a username and logs the user without needing a password.  The plugin also disables ability for user to manipulate their password or login via standard MantisBT login page.
+The authentication mechanism implemented by this plugin works as follows:
+- If user is administrator, use standard authentication.
+- If user is not registered in the db, user standard behavior.
+- Otherwise, auto-signin the user without a password.
+
+Users that are auto-signed in, can't manage or use passwords that are stored in the MantisBT database.
 
 The plugin can be easily modified to redirect to an identity provider and validate the token returned or validate a username and password against a database or LDAP.
 
 ## Authentication Flags
-The authentication flags events enables the plugin to control MantisBT core authentication behavior and provide its own authentication pages.
+The authentication flags events enables the plugin to control MantisBT core authentication behavior on a per user basis.
+Plugins can also show their own pages to accept credentials from the user.
 
-- `signup_enabled` - enable signups (ON/OFF).
-- `signup_access_level` - access level to assign for users who signup.
-- `anonymous_enabled` - enable anonymous login (ON/OFF)
-- `anonymous_account` - anonymous account name. Only applicable when `anonymous_enabled` is set to ON.
-- `access_level_set_password` minimum access level to set password in MantisBT database or NOBODY to disable.
 - `password_managed_elsewhere_message` message to show in MantisBT UI to indicate that password is managed externally.  If left blank or not set, the default message will be used.
-- `password_change_not_allowed_message` message to show indicating to user that they can’t edit their password.  If left blank or not set, the default messages will be used.
-- `access_level_create_api_tokens` Access level required to set API tokens.
-- `access_level_can_use_standard_login` Access level required use standard login.  Should be set to ANYBODY if signed up or anonymous access is supported.  Otherwise, can be set to ADMINISTRATOR or some access level.
+- `can_use_standard_login` true then standard password form and validation is used, false: otherwise.
 - `login_page` Custom login page to use.
+- `credential_apge` The page to show to ask the user for their credential.
 - `logout_page` Custom logout page to use.
 - `logout_redirect_page` Page to redirect to after user is logged out.
 - `session_lifetime` Default session lifetime in seconds or 0 for browser session.
@@ -29,11 +29,22 @@ The authentication flags events enables the plugin to control MantisBT core auth
 
 If a flag is not returned by the plugin, the default value will be used based on MantisBT core configuration.
 
+The plugin will get a user id and username within an associative array.  The flags returned are
+in context of such user.  If user is not in db, then user_id will be 0, but username will be what
+the user typed in the first login page that asks for username.
+
+If plugin doesn't want to handle a specific user, it should return null.  Otherwise, it should
+return the `AuthFlags` with the overriden settings.
+
 ## Screenshots
 
-Login Page
+Native Login Page for Username
 
-![Login Page](doc/sample_auth_login_page.png "Login Page")
+![Login Page](doc/native_login_form_for_username.png "Native Login Page")
+
+Native Credentials Page for Password (skipped for non-administrators)
+
+![Credentials Page](doc/native_credentials_page.png "Native Credentials Page")
 
 User My Account Page
 
