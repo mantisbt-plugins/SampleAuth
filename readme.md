@@ -1,14 +1,12 @@
 # SampleAuth Plugin
 
-#
-# Autoprov and authenticator support added by Tamas Dajka (viper@vipernet.hu)
-#
-
 This is a sample authentication plugin showing how a MantisBT authentication plugin can implement its own authentication and control authentication related flags on a per user basis.
+
+Autoprov and authenticator support added by Tamas Dajka (viper@vipernet.hu)
 
 The authentication mechanism implemented by this plugin works as follows:
 - If user is administrator, use standard authentication.
-- If user is not registered in the db, user standard behavior.
+- If user is not registered in the db, use standard behavior; or if autoprovision is set then provision the user
 - Otherwise, auto-signin the user without a password.
 
 Users that are auto-signed in, can't manage or use passwords that are stored in the MantisBT database.
@@ -51,19 +49,30 @@ If you want to use multiple auth backends, than you'll have to do filtering. You
 - use authenticator_page and setup the login there
 - setup filtering in class and have multiple instances of the class (not yet tested)
 
-1) Set login_page
-- if you set the login page, than the user will be validated after Mantis runs login.php. It's difficult to properly set up, due to Mantis logic
-- only works, if the user is known to Mantis. Autoprovisioning is not possible.
+1. Set login_page
+   - if you set the login page, than the user will be validated after Mantis runs login.php. It's difficult to properly set up, due to Mantis logic
+   - only works, if the user is known to Mantis. Autoprovisioning is not possible.
 
-2) Set credential_page
-- you'll be able to use SSO or orher 3rd party auth provider
-- this is called, once Mantis asks for the username
-- you'll have to ask for the user's password
-- will only work, if the user is known to Mantis OR you set up and turn on autoprovisioning!
+2. Set credential_page
+   - you'll be able to use SSO or orher 3rd party auth provider
+   - this is called, once Mantis asks for the username
+   - you'll have to ask for the user's password
+   - will only work, if the user is known to Mantis OR you set up and turn on autoprovisioning!
 
-3) Set authenticator_page
-- you'll make use of Mantis built in login mech (username/password page)
-- you'll have to use your own method to authenticate the user, with the possibility of autoprovision it (and assign to projects, etc)
+3. Set authenticator_page
+   - you'll make use of Mantis built in login mech (username/password page)
+   - you'll have to use your own method to authenticate the user, with the possibility of autoprovision it (and assign to projects, etc)
+
+
+## About Mantis login flow
+
+The following describes the standard login flow of Mantis; if user is not logged in, then login_page is shown to aquire the username.
+
+- Login Page to aquire username
+- Username is sent to Login Password page
+  - if CredentialsPage authflag is set, then user is redirected to it _(please note, user must be known to Mantis or user autoprovision must be configured and enabled)_
+  - if AuthenticatorPage authflag is set then the password is aquired, but all data is POST-ed to the page provided
+- Username and Password is POST-ed to login.php, which validates the data. If you set LoginPage authflag, than the user will be redirected to it, if her/his credentials (password) were not valid _(NOTE that user must be known to Mantis for this to work!)_
 
 ## Screenshots
 
