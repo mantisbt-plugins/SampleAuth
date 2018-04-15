@@ -6,36 +6,18 @@ require_once( 'core.php' );
 require_api( 'authentication_api.php' );
 require_api( 'user_api.php' );
 
-$f_username = gpc_get_string( 'username', '' );
-$f_password = gpc_get_string( 'password', '' );
+$f_username = gpc_get( 'username' );
 $f_reauthenticate = gpc_get_bool( 'reauthenticate', false );
 $f_return = gpc_get_string( 'return', config_get( 'default_home_page' ) );
 
 $t_return = string_url( string_sanitize_url( $f_return ) );
 
-$f_username = auth_prepare_username( $f_username );
-$f_password = auth_prepare_password( $f_password );
-
 /*
 *
-* Log in the user with the custom class
-*
-* class should return username/false upon successful/failed login
+* Set up and call the external authenticator with the username provided
+* (password is not known this time - makeing use of SSO possible
 *
 */
-
-plugin_require_api( 'core/CustomAuthPlugin.php' );
-$cap = new CustomAuthPlugin();
-if ( ( $f_username = $cap->login($f_username,$f_password) ) ) {
-    /*
-    *
-    * All set, good to go
-    *
-    * if you want to assign the user to project(s) based on a criteria
-    * than this is the right palce. Don't forget to check if it's already assigned
-    *
-    */
-}
 
 $t_user_id = is_blank( $f_username ) ? false : user_get_id_by_name( $f_username );
 
