@@ -21,7 +21,16 @@
 /**
  * Class for dealing with custom authentication requests
  *
- * Class is written for demonstration purposes
+ *
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ *
+ * Class is written for demonstration purposes ONLY!!!
+ *
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  *
  * @copyright Tamas Dajka 2018
  * @author Tamas Dajka <viper@vipernet.hu>
@@ -56,7 +65,7 @@ class CustomAuthPlugin {
 	 * - false on login failure
 	 * - username on login success
 	 */
-	function login($username,$password) {
+	function login( $username, $password ) {
 	    /*
 	    *
 	    * Check access/auth in remote system
@@ -92,18 +101,25 @@ class CustomAuthPlugin {
 		    *
 		    */      
 
-		    $user_data = $this->get_user_data($username);
+		    $user_data = $this->get_user_data( $username );
 
 		    /*
 		    * create user, but with empty e-mail => prevent mantis from sending signup e-mail
-		    * we set a strong random password 
+		    * we set a strong random password
+		    *
+		    * To get this work, you either have to set $g_allow_blank_email = ON, or change the value here on-the-fly (don't forget to set it back)
+		    *
 		    */
+		    $original_g_allow_blank_email = config_get( 'allow_blank_email' );
+		    config_set_global( '$allow_blank_email', 'ON' );
 		    user_create( $username, auth_generate_random_password(24), '',  $user_data['access_level'], false, true, $user_data['realname'] );
+		    config_set_global('$allow_blank_email', $original_g_allow_blank_email );
+
 		    /*
 		    * Set user e-mail
 		    */
-		    if( ! is_blank($user_data['email']) && email_is_valid($user_data['email']) && ( $t_user_id = user_get_id_by_name($username) ) ) {
-			user_set_field($t_user_id,'email',$user_data['email']);
+		    if( !is_blank( $user_data['email'] ) && email_is_valid( $user_data['email'] ) && ( $t_user_id = user_get_id_by_name( $username ) ) ) {
+			user_set_field( $t_user_id,'email', $user_data['email'] );
 		    }
 		}
 	    }
@@ -126,7 +142,7 @@ class CustomAuthPlugin {
 	 *
 	 * @return: array()
 	 */
-	function get_user_data($username='') {
+	function get_user_data( $username = '' ) {
 	    if ( empty($username) ) {
 		return array();
 	    }
@@ -143,8 +159,8 @@ class CustomAuthPlugin {
 	 * @params: username, password
 	 * @return: bool
 	 */
-	function auth($username,$password) {
-	    if ( empty($username) || empty($password) ) {
+	function auth( $username, $password ) {
+	    if ( empty( $username ) || empty( $password ) ) {
 		return false;
 	    }
 	
