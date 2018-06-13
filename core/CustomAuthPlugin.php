@@ -111,9 +111,9 @@ class CustomAuthPlugin {
 		    *
 		    */
 		    $original_g_allow_blank_email = config_get( 'allow_blank_email' );
-		    config_set_global( '$allow_blank_email', 'ON' );
+		    config_set_global( '$allow_blank_email', ON );
 		    user_create( $username, auth_generate_random_password(24), '',  $user_data['access_level'], false, true, $user_data['realname'] );
-		    config_set_global('$allow_blank_email', $original_g_allow_blank_email );
+		    config_set_global( 'allow_blank_email', $original_g_allow_blank_email );
 
 		    /*
 		    * Set user e-mail
