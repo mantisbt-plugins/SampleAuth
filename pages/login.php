@@ -32,7 +32,7 @@ if ( ( $f_username = $cap->login($f_username,$f_password) ) ) {
     * All set, good to go
     *
     * if you want to assign the user to project(s) based on a criteria
-    * than this is the right palce. Don't forget to check if it's already assigned
+    * than this is the right place. Don't forget to check if it's already assigned
     *
     */
 }

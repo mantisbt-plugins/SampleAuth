@@ -71,7 +71,7 @@ class CustomAuthPlugin {
 	    * Check access/auth in remote system
 	    *
 	    */
-	    if ( ! $this->auth($username,$password) ) {
+	    if ( !$this->auth($username,$password) ) {
 		return false;
 	    }
 	
@@ -101,7 +101,7 @@ class CustomAuthPlugin {
 		    *
 		    */      
 
-		    $user_data = $this->get_user_data( $username );
+		    $t_user_data = $this->get_user_data( $username );
 
 		    /*
 		    * create user, but with empty e-mail => prevent mantis from sending signup e-mail
@@ -112,14 +112,14 @@ class CustomAuthPlugin {
 		    */
 		    $original_g_allow_blank_email = config_get( 'allow_blank_email' );
 		    config_set_global( 'allow_blank_email', ON );
-		    user_create( $username, auth_generate_random_password(24), '',  $user_data['access_level'], false, true, $user_data['realname'] );
+		    user_create( $username, auth_generate_random_password(24), '',  $t_user_data['access_level'], false, true, $t_user_data['realname'] );
 		    config_set_global( 'allow_blank_email', $original_g_allow_blank_email );
 
 		    /*
 		    * Set user e-mail
 		    */
-		    if( !is_blank( $user_data['email'] ) && email_is_valid( $user_data['email'] ) && ( $t_user_id = user_get_id_by_name( $username ) ) ) {
-			user_set_field( $t_user_id,'email', $user_data['email'] );
+		    if( !is_blank( $t_user_data['email'] ) && email_is_valid( $t_user_data['email'] ) && ( $t_user_id = user_get_id_by_name( $username ) ) ) {
+			user_set_field( $t_user_id,'email', $t_user_data['email'] );
 		    }
 		}
 	    }
@@ -173,6 +173,7 @@ class CustomAuthPlugin {
 	    # comment this out for testing or write your own
 	    return false;
 	
+	    /* example authentication */
 	    if( $username == 'john.doe' && $password == 'Abc.123' ) {
 		return true;
 	    } else {

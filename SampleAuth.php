@@ -105,10 +105,10 @@ class SampleAuthPlugin extends MantisPlugin  {
 		* custom Authenticator Page for user. This is called, when the user entered both username and password in the standard MantisBT login flow
 		* username and password in $_POST
 		*
-		* Please NOTE: if you don't do any filtering - e.g. e-mail - than this will be the only Auth Plugin besides the built-in! Stacking is not (yes) supported
+		* Please NOTE: if you don't do any filtering - e.g. e-mail - than this will be the only Auth Plugin besides the built-in! Stacking is not (yet) supported
 		*
 		*/
-		$t_flags->setAuthenticatorPage( helper_url_combine( plugin_page( 'login', /* redirect */ true ), ( !empty($t_username) ? 'username=' . $t_username : '' ) ) );
+		$t_flags->setAuthenticatorPage( helper_url_combine( plugin_page( 'login', /* redirect */ true ), ( !empty($t_username) ? 'username=' . urlencode($t_username) : '' ) ) );
 		/*
 		*
 		* custom Logout Page for user.
